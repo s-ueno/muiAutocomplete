@@ -1,0 +1,51 @@
+{
+  "name": "muiautocomplete",
+  "version": "1.0.0",
+  "description": "Simple autocomplete search component using react material ui",
+  "main": "dist/index.tsx",
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/",
+  "keywords": [
+    "javascript",
+    "typescript",
+    "react",
+    "autocomplete",
+    "material ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint ./src/**/*.ts ./src/**/*.tsx",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "uEN",
+  "license": "MIT",
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/styles": "^4.10.0",
+    "classnames": "^2.2.6",
+    "clsx": "^1.1.1",
+    "uuid": "^8.3.0",
+    "react": "^16.13.1",
+    "react-scripts": "^3.4.1",
+    "jsonp": "^0.2.1",
+    "use-async-effect": "^2.2.2"
+  },
+  "devDependencies": {
+    "@types/jsonp": "^0.2.0",
+    "@types/react": "16.9.9",
+    "@types/uuid": "^8.3.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "cross-env": "6.0.3",
+    "eslint": "^6.5.1",
+    "eslint-plugin-react": "7.16.0",
+    "typescript": "^3.9.7"
+  }
+}
