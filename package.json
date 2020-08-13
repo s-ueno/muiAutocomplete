@@ -1,5 +1,5 @@
 {
-  "name": "muiautocomplete",
+  "name": "mui-autocomplete-suggestions",
   "version": "1.0.0",
   "description": "Simple autocomplete search component using react material ui",
   "main": "dist/index.tsx",
