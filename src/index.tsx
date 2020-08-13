@@ -100,13 +100,13 @@ function MuiAutocomplete<T>(props: MuiAutocompleteProps<T>) {
             const enq = encodeURI(String(baseProps.value));
             if (!suggestSource || suggestSource === "Google") {
                 await Lazy(async () => {
-                    jsonp(`http://www.google.com/complete/search?q=${enq}&client=firefox`, (error, data) => {
+                    jsonp(`https://www.google.com/complete/search?q=${enq}&client=firefox`, (error, data) => {
                         setDefaultOptions(data[1]);
                     });
                 }, suggestDelaymsec ?? 500);
             } else if (suggestSource === "Amazon") {
                 await Lazy(async () => {
-                    jsonp(`http://completion.amazon.co.jp/search/complete?mkt=6&method=completion&search-alias=aps&q=${enq}`, (error, data) => {
+                    jsonp(`https://completion.amazon.co.jp/search/complete?mkt=6&method=completion&search-alias=aps&q=${enq}`, (error, data) => {
                         setDefaultOptions(data[1]);
                     });
                 }, suggestDelaymsec ?? 500);

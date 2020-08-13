@@ -97,14 +97,14 @@ function MuiAutocomplete(props) {
             const enq = encodeURI(String(baseProps.value));
             if (!suggestSource || suggestSource === "Google") {
                 yield Lazy(() => __awaiter(this, void 0, void 0, function* () {
-                    jsonp_1.default(`http://www.google.com/complete/search?q=${enq}&client=firefox`, (error, data) => {
+                    jsonp_1.default(`https://www.google.com/complete/search?q=${enq}&client=firefox`, (error, data) => {
                         setDefaultOptions(data[1]);
                     });
                 }), suggestDelaymsec !== null && suggestDelaymsec !== void 0 ? suggestDelaymsec : 500);
             }
             else if (suggestSource === "Amazon") {
                 yield Lazy(() => __awaiter(this, void 0, void 0, function* () {
-                    jsonp_1.default(`http://completion.amazon.co.jp/search/complete?mkt=6&method=completion&search-alias=aps&q=${enq}`, (error, data) => {
+                    jsonp_1.default(`https://completion.amazon.co.jp/search/complete?mkt=6&method=completion&search-alias=aps&q=${enq}`, (error, data) => {
                         setDefaultOptions(data[1]);
                     });
                 }), suggestDelaymsec !== null && suggestDelaymsec !== void 0 ? suggestDelaymsec : 500);
