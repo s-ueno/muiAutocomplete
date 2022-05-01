@@ -1,6 +1,6 @@
 {
   "name": "mui-autocomplete-suggestions",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "description": "Simple autocomplete search component using react material ui",
   "main": "./dist/index.js",
   "homepage": "https://github.com/s-ueno/muiAutocomplete",
@@ -23,24 +23,21 @@
     "lint": "eslint ./src/**/*.ts ./src/**/*.tsx",
     "prepublishOnly": "npm run build"
   },
-
-  "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
-    "clsx": "^1.1.1",
-    "uuid": "^8.3.0",
-    "jsonp": "^0.2.1",
-    "use-async-effect": "^2.2.2"
-  },
+  "files": [
+    "src"
+  ],
   "devDependencies": {
-    "@types/jsonp": "^0.2.0",
-    "@types/react": "16.9.9",
-    "@types/uuid": "^8.3.0",
+    "@types/jsonp": "^0.2.1",
+    "@types/react": "^18.0.8",
     "@typescript-eslint/parser": "^2.34.0",
-    "eslint": "^6.5.1",
-    "eslint-plugin-react": "7.16.0",
-    "typescript": "^3.9.7",
-    "react": "^16.13.1"
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.16.0"
+  },
+  "dependencies": {
+    "react": "^18.1.0",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.6.3",
+    "jsonp": "^0.2.1"
   }
 }

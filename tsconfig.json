@@ -12,6 +12,12 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true
-  }
+    "declaration": true,
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "demo",
+  ],  
 }

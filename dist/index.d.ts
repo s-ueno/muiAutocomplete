@@ -1,6 +1,5 @@
 import React from "react";
-import { AutocompleteProps, AutocompleteInputChangeReason } from '@material-ui/lab';
-export declare function Lazy(action: Function, msec: number): Promise<unknown>;
+import { AutocompleteInputChangeReason, AutocompleteProps } from "@mui/material";
 export interface MuiAutocompleteProps<T> extends Omit<AutocompleteProps<T, boolean | undefined, boolean | undefined, boolean | undefined>, "renderInput" | "options" | "open" | "onOpen" | "onClose" | "loading" | "onInputChange"> {
     startAdornment?: React.ReactNode;
     endAdornment?: React.ReactNode;
@@ -18,3 +17,5 @@ export interface MuiAutocompleteProps<T> extends Omit<AutocompleteProps<T, boole
 }
 declare function MuiAutocomplete<T>(props: MuiAutocompleteProps<T>): JSX.Element;
 export default MuiAutocomplete;
+export declare function lazy(action: Function, msec: number): Promise<unknown>;
+export declare function uuidv4(): string;
