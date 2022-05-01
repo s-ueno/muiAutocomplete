@@ -50,38 +50,46 @@ exports.uuidv4 = exports.lazy = void 0;
 const react_1 = __importStar(require("react"));
 const material_1 = require("@mui/material");
 const jsonp_1 = __importDefault(require("jsonp"));
+const urls = {
+    Google: "https://www.google.com/complete/search?client=firefox&q=",
+    Amazon: "https://completion.amazon.co.jp/search/complete?mkt=6&method=completion&search-alias=aps&q=",
+    YOUTUBE: "http://clients1.google.com/complete/search?client=firefox&q=",
+    YAHOO: "http://ff.search.yahoo.com/gossip?output=json&command=",
+};
 function MuiAutocomplete(props) {
     var _a, _b, _c;
     const { startAdornment, endAdornment, textFieldClassName, width, widthWhenFocused, variant, placeholder, suggestSource, suggestDelaymsec, onInputDoneDelaymsec, onInputDone, onInputChange, options, sx } = props, baseProps = __rest(props, ["startAdornment", "endAdornment", "textFieldClassName", "width", "widthWhenFocused", "variant", "placeholder", "suggestSource", "suggestDelaymsec", "onInputDoneDelaymsec", "onInputDone", "onInputChange", "options", "sx"]);
     const [open, setOpen] = (0, react_1.useState)(false);
-    const [defaultOptions, setDefaultOptions] = (0, react_1.useState)([]);
-    const loading = open && (options !== null && options !== void 0 ? options : []).length === 0;
+    const [dynamicOptions, setDynamicOptions] = (0, react_1.useState)(options !== null && options !== void 0 ? options : new Array());
+    const [loading, setLoading] = (0, react_1.useState)(false);
     const theme = (0, material_1.useTheme)();
     useEffectAsync(() => __awaiter(this, void 0, void 0, function* () {
-        if (!suggestSource ||
-            suggestSource === "Amazon" ||
-            suggestSource === "Google") {
+        setOpen(false);
+        if (!baseProps.value) {
+            setDynamicOptions([]);
+            setLoading(false);
+            return;
+        }
+        setLoading(true);
+        if (!suggestSource || suggestSource !== "Manual") {
             const q = String(baseProps.value);
             if (!q || q === "" || q === undefined) {
-                setDefaultOptions([]);
+                setDynamicOptions([]);
                 return;
             }
             const enq = encodeURI(String(baseProps.value));
-            if (!suggestSource || suggestSource === "Google") {
-                yield lazy(() => __awaiter(this, void 0, void 0, function* () {
-                    (0, jsonp_1.default)(`https://www.google.com/complete/search?q=${enq}&client=firefox`, (error, data) => {
-                        setDefaultOptions(data[1]);
+            const url = urls[suggestSource !== null && suggestSource !== void 0 ? suggestSource : "Google"];
+            const arr = yield lazy(() => __awaiter(this, void 0, void 0, function* () {
+                return new Promise((resolve, reject) => {
+                    (0, jsonp_1.default)(`${url}${enq}`, (error, data) => {
+                        resolve(data[1]);
                     });
-                }), suggestDelaymsec !== null && suggestDelaymsec !== void 0 ? suggestDelaymsec : 500);
-            }
-            else if (suggestSource === "Amazon") {
-                yield lazy(() => __awaiter(this, void 0, void 0, function* () {
-                    (0, jsonp_1.default)(`https://completion.amazon.co.jp/search/complete?mkt=6&method=completion&search-alias=aps&q=${enq}`, (error, data) => {
-                        setDefaultOptions(data[1]);
-                    });
-                }), suggestDelaymsec !== null && suggestDelaymsec !== void 0 ? suggestDelaymsec : 500);
-            }
+                });
+            }), suggestDelaymsec !== null && suggestDelaymsec !== void 0 ? suggestDelaymsec : 500);
+            setDynamicOptions(arr);
         }
+        setLoading(false);
+        setOpen(true);
     }), [baseProps.value]);
     function onLocalInputChanged(event, value, reason) {
         if (onInputChange) {
@@ -93,8 +101,10 @@ function MuiAutocomplete(props) {
             }, onInputDoneDelaymsec !== null && onInputDoneDelaymsec !== void 0 ? onInputDoneDelaymsec : 500);
         }
     }
-    return (react_1.default.createElement(material_1.Autocomplete, Object.assign({}, baseProps, { options: options !== null && options !== void 0 ? options : defaultOptions, autoComplete: (_a = baseProps === null || baseProps === void 0 ? void 0 : baseProps.autoComplete) !== null && _a !== void 0 ? _a : true, open: open, onOpen: () => {
-            setOpen(true);
+    return (react_1.default.createElement(material_1.Autocomplete, Object.assign({}, baseProps, { options: dynamicOptions, autoComplete: (_a = baseProps === null || baseProps === void 0 ? void 0 : baseProps.autoComplete) !== null && _a !== void 0 ? _a : true, open: open, onOpen: () => {
+            if (!loading) {
+                setOpen(true);
+            }
         }, onClose: () => {
             setOpen(false);
         }, id: (_b = baseProps === null || baseProps === void 0 ? void 0 : baseProps.id) !== null && _b !== void 0 ? _b : `ac-${uuidv4()}`, freeSolo: (_c = baseProps === null || baseProps === void 0 ? void 0 : baseProps.freeSolo) !== null && _c !== void 0 ? _c : true, sx: Object.assign({ position: "relative", marginLeft: 0, width: props === null || props === void 0 ? void 0 : props.width, transition: theme.transitions.create("width"), "&.Mui-focused": {
@@ -116,7 +126,7 @@ function MuiAutocomplete(props) {
 exports.default = MuiAutocomplete;
 function useEffectAsync(action, deps) {
     (0, react_1.useEffect)(() => {
-        let unmount = true;
+        let unmount = false;
         let result;
         const asyncAction = () => __awaiter(this, void 0, void 0, function* () {
             if (unmount)
@@ -147,9 +157,9 @@ function lazy(action, msec) {
     const key = action.toString();
     clearTimeout(setTimeoutHandle[key]);
     return new Promise((resolve, reject) => {
-        setTimeoutHandle[key] = setTimeout(() => {
-            resolve(action());
-        }, msec);
+        setTimeoutHandle[key] = setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+            resolve(yield Promise.resolve(action()));
+        }), msec);
     });
 }
 exports.lazy = lazy;

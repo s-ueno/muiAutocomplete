@@ -8,7 +8,7 @@ export interface MuiAutocompleteProps<T> extends Omit<AutocompleteProps<T, boole
     widthWhenFocused?: string;
     variant?: "standard" | "filled" | "outlined";
     placeholder?: string;
-    suggestSource?: "Google" | "Amazon" | "Manual";
+    suggestSource?: "Google" | "Amazon" | "YOUTUBE" | "YAHOO" | "Manual";
     suggestDelaymsec?: number;
     onInputDoneDelaymsec?: number;
     onInputDone?: (event: React.ChangeEvent<{}>, value: string, reason?: AutocompleteInputChangeReason) => void;
@@ -17,5 +17,5 @@ export interface MuiAutocompleteProps<T> extends Omit<AutocompleteProps<T, boole
 }
 declare function MuiAutocomplete<T>(props: MuiAutocompleteProps<T>): JSX.Element;
 export default MuiAutocomplete;
-export declare function lazy(action: Function, msec: number): Promise<unknown>;
+export declare function lazy<T>(action: Function, msec: number): Promise<T>;
 export declare function uuidv4(): string;

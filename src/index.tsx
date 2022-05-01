@@ -1,4 +1,4 @@
-import React, { DependencyList, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Autocomplete,
   AutocompleteInputChangeReason,
@@ -33,7 +33,7 @@ export interface MuiAutocompleteProps<T>
   variant?: "standard" | "filled" | "outlined";
   placeholder?: string;
 
-  suggestSource?: "Google" | "Amazon" | "Manual";
+  suggestSource?: "Google" | "Amazon" | "YOUTUBE" | "YAHOO" | "Manual";
   suggestDelaymsec?: number;
 
   onInputDoneDelaymsec?: number;
@@ -50,7 +50,13 @@ export interface MuiAutocompleteProps<T>
 
   options?: T[];
 }
-
+const urls: { [key: string]: string } = {
+  Google: "https://www.google.com/complete/search?client=firefox&q=",
+  Amazon:
+    "https://completion.amazon.co.jp/search/complete?mkt=6&method=completion&search-alias=aps&q=",
+  YOUTUBE: "http://clients1.google.com/complete/search?client=firefox&q=",
+  YAHOO: "http://ff.search.yahoo.com/gossip?output=json&command=",
+};
 function MuiAutocomplete<T>(props: MuiAutocompleteProps<T>) {
   const {
     startAdornment,
@@ -70,42 +76,41 @@ function MuiAutocomplete<T>(props: MuiAutocompleteProps<T>) {
     ...baseProps
   } = props;
   const [open, setOpen] = useState(false);
-  const [defaultOptions, setDefaultOptions] = useState([]);
-  const loading = open && (options ?? []).length === 0;
+  const [dynamicOptions, setDynamicOptions] = useState(
+    options ?? new Array<T>()
+  );
+  const [loading, setLoading] = useState(false);
   const theme = useTheme();
   useEffectAsync(async () => {
-    if (
-      !suggestSource ||
-      suggestSource === "Amazon" ||
-      suggestSource === "Google"
-    ) {
+    setOpen(false);
+
+    if (!baseProps.value) {
+      setDynamicOptions([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    if (!suggestSource || suggestSource !== "Manual") {
       const q: string = String(baseProps.value);
       if (!q || q === "" || q === undefined) {
-        setDefaultOptions([]);
+        setDynamicOptions([]);
         return;
       }
-
       const enq = encodeURI(String(baseProps.value));
-      if (!suggestSource || suggestSource === "Google") {
-        await lazy(async () => {
-          jsonp(
-            `https://www.google.com/complete/search?q=${enq}&client=firefox`,
-            (error, data) => {
-              setDefaultOptions(data[1]);
-            }
-          );
-        }, suggestDelaymsec ?? 500);
-      } else if (suggestSource === "Amazon") {
-        await lazy(async () => {
-          jsonp(
-            `https://completion.amazon.co.jp/search/complete?mkt=6&method=completion&search-alias=aps&q=${enq}`,
-            (error, data) => {
-              setDefaultOptions(data[1]);
-            }
-          );
-        }, suggestDelaymsec ?? 500);
-      }
+      const url = urls[suggestSource ?? "Google"];
+      const arr = await lazy<T[]>(async () => {
+        return new Promise((resolve, reject) => {
+          jsonp(`${url}${enq}`, (error, data) => {
+            resolve(data[1]);
+          });
+        });
+      }, suggestDelaymsec ?? 500);
+      setDynamicOptions(arr);
     }
+
+    setLoading(false);
+    setOpen(true);
   }, [baseProps.value]);
 
   function onLocalInputChanged(
@@ -126,11 +131,13 @@ function MuiAutocomplete<T>(props: MuiAutocompleteProps<T>) {
   return (
     <Autocomplete
       {...baseProps}
-      options={options ?? defaultOptions}
+      options={dynamicOptions}
       autoComplete={baseProps?.autoComplete ?? true}
       open={open}
       onOpen={() => {
-        setOpen(true);
+        if (!loading) {
+          setOpen(true);
+        }
       }}
       onClose={() => {
         setOpen(false);
@@ -219,12 +226,12 @@ function useEffectAsync<T>(action: () => Promise<T>, deps?: unknown[]) {
 }
 
 var setTimeoutHandle: { [key: string]: any } = {};
-export function lazy(action: Function, msec: number) {
+export function lazy<T>(action: Function, msec: number) {
   const key = action.toString();
   clearTimeout(setTimeoutHandle[key]);
-  return new Promise((resolve, reject) => {
-    setTimeoutHandle[key] = setTimeout(() => {
-      resolve(action());
+  return new Promise<T>((resolve, reject) => {
+    setTimeoutHandle[key] = setTimeout(async () => {
+      resolve(await Promise.resolve(action()));
     }, msec);
   });
 }
