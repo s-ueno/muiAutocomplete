@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import jsonp from "jsonp";
-export interface MuiAutocompleteProps<T>
+interface MuiAutocompleteProps<T>
   extends Omit<
     AutocompleteProps<
       T,
@@ -226,7 +226,7 @@ function useEffectAsync<T>(action: () => Promise<T>, deps?: unknown[]) {
 }
 
 var setTimeoutHandle: { [key: string]: any } = {};
-export function lazy<T>(action: Function, msec: number) {
+function lazy<T>(action: Function, msec: number) {
   const key = action.toString();
   clearTimeout(setTimeoutHandle[key]);
   return new Promise<T>((resolve, reject) => {
@@ -236,7 +236,7 @@ export function lazy<T>(action: Function, msec: number) {
   });
 }
 
-export function uuidv4() {
+function uuidv4() {
   let chars = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".split("");
   for (let i = 0, len = chars.length; i < len; i++) {
     switch (chars[i]) {

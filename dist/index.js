@@ -46,7 +46,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uuidv4 = exports.lazy = void 0;
 const react_1 = __importStar(require("react"));
 const material_1 = require("@mui/material");
 const jsonp_1 = __importDefault(require("jsonp"));
@@ -162,7 +161,6 @@ function lazy(action, msec) {
         }), msec);
     });
 }
-exports.lazy = lazy;
 function uuidv4() {
     let chars = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".split("");
     for (let i = 0, len = chars.length; i < len; i++) {
@@ -177,4 +175,3 @@ function uuidv4() {
     }
     return chars.join("");
 }
-exports.uuidv4 = uuidv4;
